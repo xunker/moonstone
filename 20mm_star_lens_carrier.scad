@@ -1,3 +1,13 @@
+/*
+  For 20mm * 11mm PMMA TIR lenses like: https://www.amazon.com/gp/product/B07VZL6N2Z/
+
+  Replaces/replicates the white plastic plastic housing that comes with the lenses.
+
+  For starboard COB leds like: https://www.amazon.com/gp/product/B07DHB61BH/
+
+  Assumes the main LED body will be 8mm * 2.5mm (excluding "bubble")
+*/
+
 // Lens
 lens_ridge_d = 20;
 lens_ridge_l = 1.15;
@@ -99,7 +109,22 @@ module housing() {
       // housing_cutouts_mock();
       housing_cutouts_real();
   }
+}
 
+module housing_cross_section() {
+  intersection() {
+    translate([-housing_d/2, 0, 0]) cube([housing_d, housing_d/2, housing_l+(ff*2)]);
+    translate([0, 0, -board_t])
+      housing();
+  }
+}
+
+module housing_no_lower() {
+  intersection() {
+    translate([-housing_d/2, -housing_d/2, 0]) cube([housing_d, housing_d, housing_l+(ff*2)]);
+    translate([0, 0, -board_t])
+      housing();
+  }
 }
 
 // lens();
@@ -107,8 +132,8 @@ module housing() {
 // star_board();
 // translate([0, 0, housing_addt])
 //   %lens_and_led();
-intersection() {
-  translate([-housing_d/2, 0, 0]) cube([housing_d, housing_d/2, housing_l+(ff*2)]);
-  translate([0, 0, -board_t])
-    housing();
-}
+
+// housing();
+// housing_cross_section();
+housing_no_lower();
+
