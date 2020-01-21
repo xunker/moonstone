@@ -35,12 +35,12 @@ module housing_cutouts_mock() {
     translate([0, 0, board_t]) led();
 }
 
-module housing_cutouts_real() {
+module housing_cutouts_real(ghost_pcb=true) {
   translate([0, 0, 0])
-      lens_and_led(include_castelations=false);
+      lens_and_led(include_castelations=false, ghost_pcb=ghost_pcb);
 }
 
-module housing() {
+module housing(ghost_pcb=true) {
   difference() {
     union() {
       difference() {
@@ -57,15 +57,15 @@ module housing() {
 
     translate([0, 0, housing_addt])
       // housing_cutouts_mock();
-      housing_cutouts_real();
+      housing_cutouts_real(ghost_pcb);
   }
 }
 
-module housing_cross_section() {
+module housing_cross_section(ghost_pcb=true) {
   intersection() {
     translate([-housing_d/2, 0, 0]) cube([housing_d, housing_d/2, housing_l+(ff*2)]);
     translate([0, 0, -board_t])
-      housing();
+      housing(ghost_pcb);
   }
 }
 
@@ -83,8 +83,8 @@ module housing_no_lower() {
 // translate([0, 0, housing_addt])
 //   %lens_and_led();
 
-scale([shrink_factor, shrink_factor, shrink_factor]) {
-  // housing();
-  // housing_cross_section();
-  housing_no_lower();
-}
+// scale([shrink_factor, shrink_factor, shrink_factor]) {
+//   // housing();
+//   // housing_cross_section();
+//   housing_no_lower();
+// }

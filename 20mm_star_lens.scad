@@ -45,9 +45,14 @@ module lens() {
   }
 }
 
-module star_board(include_castelations=true) {
+module star_board(include_castelations=true, ghost_pcb=false) {
   difference() {
-    cylinder(d=board_d, h=board_t, $fn=48);
+    if (ghost_pcb) {
+      %cylinder(d=board_d, h=board_t, $fn=48);
+    } else {
+      cylinder(d=board_d, h=board_t, $fn=48);
+    }
+
     if (include_castelations) {
       for(deg=[0:(360/castelations):360]) {
         rotate([0, 0, deg]) translate([board_d/2, 0, -ff]) cylinder(r=castelation_r, h=board_t+(ff*2));
@@ -63,9 +68,18 @@ module led() {
   translate([0, 0, led_h]) sphere(d=led_bubble_d, $fn=16);
 }
 
-module lens_and_led(include_castelations=true) {
+module lens_and_led(include_castelations=true, include_cone=false, ghost_pcb=false) {
   translate([0, 0, lens_total_l+board_t+led_h]) rotate([0, 180, 0]) lens();
-  star_board(include_castelations);
+  star_board(include_castelations, ghost_pcb);
+
+  if (include_cone) {
+    // r / h = degrees
+    cone_h = led_h*10;
+    cone_base_r = cone_h / tan(60); // make cone with 60 degree angle
+    %translate([0, 0, board_t+led_h]) cylinder(d1=led_bubble_d, d2=cone_base_r*2, h=cone_h);
+  }
 }
 
-// lens_and_led();
+// lens_and_led(include_cone=true);
+
+
