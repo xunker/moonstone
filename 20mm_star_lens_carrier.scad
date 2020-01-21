@@ -5,8 +5,12 @@
 
   For starboard COB leds like: https://www.amazon.com/gp/product/B07DHB61BH/
 
-  Assumes the main LED body will be 8mm * 2.5mm (excluding "bubble")
+  Assumes the main LED body will be ~8mm * 2.5mm (excluding "bubble")
 */
+
+/* Scale the rendered output by this multiple to account for filament shrinkage,
+such as if you are using ABS that tends to shrink from 8%-10%. */
+shrink_factor = 1.02;
 
 // Lens
 lens_ridge_d = 20;
@@ -27,13 +31,15 @@ board_t = 1.22;
 castelations = 6;
 castelation_r = 2.5;
 
-led_d = 8;
+led_d = 8.25;
 led_h = 2.5; // just body, not bubble
-led_lead_w = 3;
-led_lead_l = 1.5;
+led_lead_w = 4;
+led_lead_l = 7;
 led_bubble_d = 5.5;
 
 // other
+
+inner_channel_d = lens_ridge_d - 1.5;
 
 // housing_addt = 1;
 housing_addt = 0;
@@ -66,7 +72,7 @@ module star_board(include_castelations=true) {
 }
 
 module led() {
-  cylinder(d=led_d, h=led_h, $fn=25);
+  cylinder(d=led_d, h=led_h, $fn=32);
   translate([-((led_lead_l*2)+led_d)/2, -led_lead_w/2, 0]) cube([(led_lead_l*2)+led_d, led_lead_w, led_h]);
   translate([0, 0, led_h]) sphere(d=led_bubble_d, $fn=16);
 }
@@ -97,11 +103,11 @@ module housing() {
         cylinder(d=housing_d, h=housing_l);
 
         // centre channel
-        translate([0, 0, -ff]) cylinder(d=lens_front_d, h=housing_l+(ff*2));
+        translate([0, 0, -ff]) cylinder(d=inner_channel_d, h=housing_l+(ff*2));
       }
 
       translate([0, 0, board_t]) {
-        cylinder(d=lens_front_d, h=led_h-ff);
+        cylinder(d=inner_channel_d, h=led_h-ff);
       }
     }
 
@@ -133,7 +139,8 @@ module housing_no_lower() {
 // translate([0, 0, housing_addt])
 //   %lens_and_led();
 
-// housing();
-// housing_cross_section();
-housing_no_lower();
-
+scale([shrink_factor, shrink_factor, shrink_factor]) {
+  // housing();
+  // housing_cross_section();
+  housing_no_lower();
+}
