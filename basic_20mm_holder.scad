@@ -16,6 +16,7 @@ locating_pin_w = 2.2;
 outer_d = cavity_d * 1.2;
 outer_l = cavity_l * 1.1;
 
+housing_l = 11;
 housing_d = lens_ridge_d + 3;
 
 module handle() {
@@ -63,7 +64,7 @@ module handle_cross_section() {
 union() {
   %handle_cross_section();
 
-  lens_angle = 35.5;
+  lens_angle = 35;
 
   housing_y_offset = (outer_d - housing_d)/2;
 
@@ -82,19 +83,36 @@ union() {
   // }
 
   difference() {
-    scale([1, 0.98, 1]) translate([0, outer_d/2, outer_d/2]) rotate([0, 90, 0]) translate([0, 0, outer_l]) rotate([0, 0, 90]) difference() {
-        cylinder(d=outer_ridge_d, h=outer_ridge_max_t);
-        translate([0, 0, 6.5]) rotate([0, 0, 180]) rotate([6, 0, 0]) cylinder(d=outer_ridge_d*1.3, h=outer_ridge_max_t);
-        // translate([0, 0, -ff]) cylinder(d=outer_ridge_d, h=outer_ridge_max_t+(ff*2));
+    hull() {
+      difference() {
+        scale([1, 0.98, 1]) translate([0, outer_d/2, outer_d/2]) rotate([0, 90, 0]) translate([0, 0, outer_l]) rotate([0, 0, 90]) difference() {
+            cylinder(d=outer_ridge_d, h=outer_ridge_max_t);
+            translate([0, 0, 6.5]) rotate([0, 0, 180]) rotate([6, 0, 0]) cylinder(d=outer_ridge_d*1.3, h=outer_ridge_max_t);
+            // translate([0, 0, -ff]) cylinder(d=outer_ridge_d, h=outer_ridge_max_t+(ff*2));
+          }
       }
 
+      /* lens assb hull */
+      translate([0, -(outer_d*0.02)/2, 0])
+      translate([outer_l-housing_l, 0, 6.5])
+      translate([6.8+1.5, 0, 0]) rotate([0,lens_angle,0])
+      translate([0, outer_d/2, outer_d/2]) rotate([0, 90, 0]) {
+        // translate([0, 0, -housing_l/4])
+        // cylinder(d=housing_d, h=housing_l*1.25, center=false);
+        cylinder(d=housing_d+2, h=housing_l, center=false);
+
+      }
+    }
+
+     /* lens assb cutout */
     translate([0, -(outer_d*0.02)/2, 0])
     translate([outer_l-housing_l, 0, 6.5])
-    translate([7.35, 0, 0]) rotate([0,lens_angle,0])
+    translate([6.8+1.5, 0, 0]) rotate([0,lens_angle,0])
     translate([0, outer_d/2, outer_d/2]) rotate([0, 90, 0]) {
       // translate([0, 0, -housing_l/4])
       // cylinder(d=housing_d, h=housing_l*1.25, center=false);
-      cylinder(d=housing_d, h=housing_l, center=false);
+      cylinder(d=housing_d, h=housing_l*2, center=false);
+      // %cylinder(d=housing_d, h=housing_l, center=false);
     }
   }
 }
