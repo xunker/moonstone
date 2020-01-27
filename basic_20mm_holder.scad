@@ -7,8 +7,8 @@ cavity_d = 28;
 cavity_l = 122;
 
 outer_ridge_d = 31;
-outer_ridge_min_t = 3;
-outer_ridge_max_t = 7;
+outer_ridge_min_t = 4.5;
+outer_ridge_max_t = 8.5;
 
 locating_pin_h = 3;
 locating_pin_w = 2.2;
@@ -16,11 +16,7 @@ locating_pin_w = 2.2;
 outer_d = cavity_d * 1.2;
 outer_l = cavity_l * 1.1;
 
-microusb_body_t = 2.4;
-microusb_connector_t = 3; // "flare" at opening of connector
-microusb_body_w = 7.4;
-microusb_connector_w = 8.0; // ditto flare
-microusb_l = 5.5;
+housing_d = lens_ridge_d + 3;
 
 module handle() {
   translate([0, outer_d/2, outer_d/2]) rotate([0, 90, 0]) {
@@ -35,7 +31,7 @@ module handle() {
     // outer ridge
     translate([0, 0, outer_l]) rotate([0, 0, 90]) difference() {
       cylinder(d=outer_ridge_d*1.2, h=outer_ridge_max_t);
-      translate([0, 0, 5]) rotate([6, 0, 0]) cylinder(d=outer_ridge_d*1.3, h=outer_ridge_max_t);
+      translate([0, 0, 5]) rotate([0, 0, 180]) rotate([6, 0, 0]) cylinder(d=outer_ridge_d*1.3, h=outer_ridge_max_t);
       translate([0, 0, -ff]) cylinder(d=outer_ridge_d, h=outer_ridge_max_t+(ff*2));
     }
   }
@@ -86,14 +82,15 @@ union() {
   // }
 
   difference() {
-    translate([0, outer_d/2, outer_d/2]) rotate([0, 90, 0]) translate([0, 0, outer_l]) rotate([0, 0, 90]) difference() {
+    scale([1, 0.98, 1]) translate([0, outer_d/2, outer_d/2]) rotate([0, 90, 0]) translate([0, 0, outer_l]) rotate([0, 0, 90]) difference() {
         cylinder(d=outer_ridge_d, h=outer_ridge_max_t);
-        translate([0, 0, 5]) rotate([6, 0, 0]) cylinder(d=outer_ridge_d*1.3, h=outer_ridge_max_t);
+        translate([0, 0, 6.5]) rotate([0, 0, 180]) rotate([6, 0, 0]) cylinder(d=outer_ridge_d*1.3, h=outer_ridge_max_t);
         // translate([0, 0, -ff]) cylinder(d=outer_ridge_d, h=outer_ridge_max_t+(ff*2));
       }
 
+    translate([0, -(outer_d*0.02)/2, 0])
     translate([outer_l-housing_l, 0, 6.5])
-    translate([2.8, 0, 0]) rotate([0,lens_angle,0])
+    translate([7.35, 0, 0]) rotate([0,lens_angle,0])
     translate([0, outer_d/2, outer_d/2]) rotate([0, 90, 0]) {
       // translate([0, 0, -housing_l/4])
       // cylinder(d=housing_d, h=housing_l*1.25, center=false);
