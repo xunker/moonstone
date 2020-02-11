@@ -14,7 +14,7 @@ difference() {
       scale([1, 0.98, 1])
       translate([0, 0, cavity_l])
       difference() {
-          cylinder(d=outer_ridge_d, h=outer_ridge_max_t);
+          cylinder(d=outer_ridge_d, h=outer_ridge_max_t, $fn=64);
           translate([0, 0, 6.5]) rotate([0, 0, 180]) rotate([6, 0, 0]) cylinder(d=outer_ridge_d*1.3, h=outer_ridge_max_t);
         }
     }
