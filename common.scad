@@ -1,5 +1,5 @@
 cavity_d = 27.75; // abs
-cavity_l = 122;
+cavity_l = 85; // length to castelations at bottom. Length including those is more like 122mm
 
 outer_ridge_d = 31;
 outer_ridge_min_t = 4.5;
